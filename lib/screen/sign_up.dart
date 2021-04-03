@@ -1,20 +1,70 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecom/widget/text_field.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
+  static Pattern pattern  = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  UserInfo userCredential;
 
+  RegExp regExp = RegExp(SignUp.pattern);
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+
+  Future sendData() async{
+    try {
+      //Creating user in firebase Auth with email password
+      userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text,
+          password: password.text,
+      );
+      //Saving User data
+      await Firestore.instance.collection('UserData').document(userCredential.uid).setData({
+        'firstName':firstName.text,
+        'LastName': lastName.text,
+        'Email':email.text,
+        'Password':password.text,
+        'UserId':userCredential.uid,//storing user id
+      });
+    } on FirebaseException catch (e) {
+      if (e.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.blue,
+            content: Text('Password is too weak'),
+          ),
+        );
+      } else if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.blue,
+            content: Text('The account already exists for that email.'),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.blue,
+          content: Text("Something went wrong"),
+        ),
+      );
+    }
+
+
+  }
+
 
   void validation(){
     //validation for firstName
@@ -47,6 +97,15 @@ class _SignUpState extends State<SignUp> {
       );
       return;
     }
+    else if(!regExp.hasMatch(email.text)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.blue,
+          content: Text('Please enter a valid Email.'),
+        ),
+      );
+      return;
+    }
     //validation for Password
     if(password.text.trim().isEmpty||password.text.trim()==null){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,6 +115,9 @@ class _SignUpState extends State<SignUp> {
         ),
       );
       return;
+    }
+    else{
+      sendData();
     }
   }
 

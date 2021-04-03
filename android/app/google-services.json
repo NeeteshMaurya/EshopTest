@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "958509772177",
+    "project_id": "foodigo-eb1f4",
+    "storage_bucket": "foodigo-eb1f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958509772177:android:0de41af9030e8eb5da7e30",
+        "android_client_info": {
+          "package_name": "mauryaneetesh.ecom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958509772177-l6c8th4uene6dbfv8n9906n6tesp4bi2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuq5esfGvNI2wd-mATkPrr7ukoOaSGp28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958509772177-l6c8th4uene6dbfv8n9906n6tesp4bi2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
