@@ -12,7 +12,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  UserInfo userCredential;
+  bool loading = false;
+  UserCredential userCredential;
 
   RegExp regExp = RegExp(SignUp.pattern);
   TextEditingController firstName = TextEditingController();
@@ -30,12 +31,12 @@ class _SignUpState extends State<SignUp> {
           password: password.text,
       );
       //Saving User data
-      await Firestore.instance.collection('UserData').document(userCredential.uid).setData({
+      await FirebaseFirestore.instance.collection('UserData').doc(userCredential.user.uid).set({
         'firstName':firstName.text,
         'LastName': lastName.text,
         'Email':email.text,
         'Password':password.text,
-        'UserId':userCredential.uid,//storing user id
+        'UserId':userCredential.user.uid,//storing user id
       });
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
@@ -60,9 +61,13 @@ class _SignUpState extends State<SignUp> {
           content: Text("Something went wrong"),
         ),
       );
+      setState(() {
+        loading = false;
+      });
     }
-
-
+    setState(() {
+      loading = false;
+    });
   }
 
 
@@ -117,6 +122,9 @@ class _SignUpState extends State<SignUp> {
       return;
     }
     else{
+      setState(() {
+        loading = true;
+      });
       sendData();
     }
   }
@@ -175,7 +183,8 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
               ),
-              Row(
+              loading?
+              CircularProgressIndicator():Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(

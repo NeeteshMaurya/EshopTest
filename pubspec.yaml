@@ -26,8 +26,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.0.2
   firebase_auth: ^1.0.1
-  cloud_firestore:
-  firebase_storage:
+  cloud_firestore: ^1.0.3
+  firebase_storage: ^8.0.1
   image_picker:
   random_string:
   cached_network_image:

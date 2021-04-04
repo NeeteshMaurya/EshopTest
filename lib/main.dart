@@ -1,6 +1,8 @@
 import 'package:ecom/screen/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ecom/screen/homepage.dart';
 import 'package:ecom/screen/welcome_page.dart';
 import 'screen/sign_up.dart';
 
@@ -20,7 +22,15 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
       ),
-      home: SignUp(),
+      home: StreamBuilder(
+        //it checks if user is already login then redirect to home page.
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (index,snapshot){
+          if(snapshot.hasData){
+            return HomePage();
+          }
+          return LoginPage();
+        }),
     );
   }
 }
